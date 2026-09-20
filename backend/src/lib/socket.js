@@ -1,13 +1,20 @@
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
+import "dotenv/config";
 
 const app = express();
 const server = http.createServer(app);
 
+const frontendUrl = process.env.FRONTEND_URL?.replace(/\/$/, "");
+const allowedOrigins = process.env.NODE_ENV === "production"
+  ? [frontendUrl].filter(Boolean)
+  : ["http://localhost:5173", "http://localhost:5174", "http://127.0.0.1:5173", "http://127.0.0.1:5174"];
+
 const io = new Server(server, {
   cors: {
-    origin: process.env.NODE_ENV === "production" ? process.env.FRONTEND_URL : ["http://localhost:5173"],
+    origin: allowedOrigins,
+    credentials: true,
   },
 });
 
@@ -29,7 +36,9 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("A user disconnected", socket.id);
-    delete userSocketMap[userId];
+    if (userId && userSocketMap[userId] === socket.id) {
+      delete userSocketMap[userId];
+    }
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });
