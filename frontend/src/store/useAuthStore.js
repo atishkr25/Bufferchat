@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 
 const BASE_URL = (
   import.meta.env.VITE_BACKEND_URL ||
-  (import.meta.env.MODE === "development" ? "http://localhost:5001" : window.location.origin)
+  (import.meta.env.MODE === "development" ? "http://localhost:5002" : window.location.origin)
 ).replace(/\/$/, "");
 
 const getErrorMessage = (error, fallback) =>
