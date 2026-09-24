@@ -8,7 +8,10 @@ export const connectDB = async () => {
       throw new Error("MONGODB_URI must be a MongoDB Atlas mongodb+srv:// URI");
     }
 
-    const conn = await mongoose.connect(mongoUri);
+    const conn = await mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 10000,
+      connectTimeoutMS: 10000,
+    });
     console.log(`MongoDB connected: ${conn.connection.host}/${conn.connection.name}`);
     return conn;
   } catch (error) {
