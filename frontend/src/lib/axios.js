@@ -8,4 +8,5 @@ const backendUrl = (
 export const axiosInstance = axios.create({
   baseURL: `${backendUrl}/api`,
   withCredentials: true,
+  timeout: 15000,
 });
